@@ -1,3 +1,5 @@
+import { ArrowFatLineRightIcon } from "@phosphor-icons/react";
+
 type Props = {
     searchTerm: string; // Текст, который пользователь в данный момент ввел в поле
     setSubmit: (value: string) => void; 
@@ -20,7 +22,7 @@ function InputField({ searchTerm, setSearchTerm, setSubmit }: Props) {
     срабатывает эта функция. Она берет то, что сейчас написано в поле,
     и с помощью setSubmit записывает это searchTerm */}
             <br />
-             <button type="submit">Search</button>
+            <button type="submit"> Search <ArrowFatLineRightIcon size={15} weight="fill" /> </button>
         </form>
     );
 }

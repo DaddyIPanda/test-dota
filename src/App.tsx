@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Input_field from "./components/Input_field";
+import { BookOpenIcon } from "@phosphor-icons/react";
 
 function App() {
   // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
@@ -42,7 +43,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1> Test Dota 2 </h1>
+      <h1> Test Dota 2 <BookOpenIcon size={32} weight="duotone" /> </h1>
       <p>
         This application allows users to search for Dota 2 players by their Steam ID and view information about them.
         You can also explore hero statistics using data from the OpenDota API.
@@ -50,8 +51,8 @@ function App() {
       <Input_field searchTerm={searchTerm} setSearchTerm={setSearchTerm} setSubmit={setSubmit} />
       <br />
       <br />
-      {/* Превращение JavaScript-объекта в текстовую строку */}
-      {players.map((player) => (
+      {/* Перебор массива players и создание карточек для каждого игрока */}
+      {players.map((player) => ( //map - метод массива, который позволяет перебрать все элементы массива и выполнить для каждого элемента определенную функцию
         <div key={player.profile.account_id}>
           <img src={player.profile.avatarfull} alt={player.profile.personaname} />
             <p>
