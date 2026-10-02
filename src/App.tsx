@@ -1,41 +1,70 @@
-import React, { useState } from "react";
-//import logo from "./logo.svg";
-//import "./App.css";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Input_field from "./components/Input_field";
 
 function App() {
-  // Функция, где переменная heroes, loading, error хранит данные, а setHeroes, setLoading, setError их меняет
-  const [heroes, setHeroes] = useState(null);
+  // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
+  const [players, setPlayers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [submit, setSubmit] = useState("");
+
+  // Позволяет выполнять побочные эффекты в функциональных компонентах
   useEffect(() => {
-    // Подберание данных о героях из OpenDota API
-    const HeroData = async () => {
-      const response = await axios.get("https://api.opendota.com/api/heroes");
-      const data = response.data;
-      setHeroes(data);
-      if (!data){
-        setError(true);
-      } else {
+    // Если account_id ещё не введён, запрос не выполняем
+    if (!submit) {
+      return;
+    }
+
+    // Подберание данных о герое из OpenDota API
+    const PlayerData = async () => {
+      try {
         setError(false);
+        setLoading(false);
+        // Отправить GET-запрос на OpenDota API, передав туда то, что пользователь ввёл в submit
+        const response = await axios.get(`https://api.opendota.com/api/players/${submit}`);
+        const data = response.data;
+
+        setPlayers([data]);
+  
+      } catch (error) {
+        console.log(error);
+        setError(true);
+        setPlayers([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    HeroData();
-  }, []);
+
+    PlayerData();
+  }, [submit]); // useEffect будет срабатывать каждый раз, когда submit изменяется
 
   return (
     <div className="App">
-      <h1>Test Dota 2</h1>
+      <h1> Test Dota 2 </h1>
       <p>
         This application allows users to search for Dota 2 players by their Steam ID and view information about them.
         You can also explore hero statistics using data from the OpenDota API.
-        
-        {/* Превращение JavaScript-объекта в текстовую строку */}
-        {JSON.stringify(heroes)}
       </p>
-    </div>
+      <Input_field searchTerm={searchTerm} setSearchTerm={setSearchTerm} setSubmit={setSubmit} />
+      <br />
+      <br />
+      {/* Превращение JavaScript-объекта в текстовую строку */}
+      {players.map((player) => (
+        <div key={player.profile.account_id}>
+          <img src={player.profile.avatarfull} alt={player.profile.personaname} />
+            <p>
+              {player.profile.personaname}<br />
+              ID: {player.profile.account_id}<br />
+              Country: {player.profile.loccountrycode}<br />
+              Last login: {player.profile.last_login}<br />
+              MMR (Matchmaking Rating): {player.computed_mmr}<br />
+              Player level: {player.rank_tier}
+            </p>
+        </div>
+      ))}
+  </div>
   );
 }
 
