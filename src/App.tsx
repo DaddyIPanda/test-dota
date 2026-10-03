@@ -8,8 +8,8 @@ function App() {
 
   // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
   const [players, setPlayers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [submit, setSubmit] = useState("");
 
@@ -20,11 +20,11 @@ function App() {
       return;
     }
 
-    // Подберание данных о герое из OpenDota API
+    // Подберание данных о игроках из OpenDota API
     const PlayerData = async () => {
       try {
-        setError(false);
-        setLoading(false);
+        setError(null);
+        setLoading(true);
 
         // Отправить GET-запрос на OpenDota API, передав туда то, что пользователь ввёл в submit
         const response = await axios.get(`https://api.opendota.com/api/players/${submit}`);
@@ -32,9 +32,9 @@ function App() {
 
         setPlayers([data]);
   
-      } catch (error) {
+      } catch (error : any) {
         console.log(error);
-        setError(true);
+        setError(error.message);
         setPlayers([]);
       } finally {
         setLoading(false);
@@ -61,9 +61,19 @@ function App() {
         This application allows users to search for Dota 2 players by their Steam ID and view information about them.
         You can also explore hero statistics using data from the OpenDota API.
       </Text>
-      <Input_field searchTerm={searchTerm} setSearchTerm={setSearchTerm} setSubmit={setSubmit} />
+      <Input_field
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        setSubmit={setSubmit}
+      />
       <br />
       <br />
+      {loading && <Text>Loading...</Text>}
+      {error && (
+          <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
+            Error fetching player data. Please check the Steam ID and try again.
+          </Text>
+        )}
       {/* Перебор массива players и создание карточек для каждого игрока */}
       {players.map((player) => (
         <Card.Root key={player.profile.account_id} maxW="800px" mx="auto" mt="6">
@@ -87,7 +97,9 @@ function App() {
                 </Text>
 
                 <Text>
-                  Country: {player.profile.loccountrycode}
+                  Country: {player.profile.loccountrycode
+                  ? player.profile.loccountrycode
+                  : "No data"}
                 </Text>
 
                 <Text>
@@ -101,11 +113,15 @@ function App() {
                 </Text>
 
                 <Text>
-                  MMR: {player.computed_mmr}
+                  MMR: {player.computed_mmr
+                  ? player.computed_mmr
+                  : "No data"}
                 </Text>
 
                 <Text>
-                  Player level: {player.rank_tier}
+                  Player level: {player.rank_tier
+                  ? player.rank_tier
+                  : "No data"}
                 </Text>
               </Box>
 
