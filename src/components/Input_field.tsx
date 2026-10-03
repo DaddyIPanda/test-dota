@@ -1,3 +1,4 @@
+import { Button, Field, Input } from "@chakra-ui/react";
 import { ArrowFatLineRightIcon } from "@phosphor-icons/react";
 
 type Props = {
@@ -14,7 +15,7 @@ function InputField({ searchTerm, setSearchTerm, setSubmit }: Props) {
         event.preventDefault();
         setSubmit(searchTerm);
         }}>
-            <input type="text" id="id" name="id" value={searchTerm}
+            <Input type="text" id="id" name="id" value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Enter Steam ID" />
 {/* value={searchTerm} - В поле ввода всегда будет отображаться то, что сейчас сохранено в searchTerm
@@ -22,7 +23,7 @@ function InputField({ searchTerm, setSearchTerm, setSubmit }: Props) {
     срабатывает эта функция. Она берет то, что сейчас написано в поле,
     и с помощью setSubmit записывает это searchTerm */}
             <br />
-            <button type="submit"> Search <ArrowFatLineRightIcon size={15} weight="fill" /> </button>
+            <Button type="submit"> Search <ArrowFatLineRightIcon size={15} weight="fill" /> </Button>
         </form>
     );
 }
