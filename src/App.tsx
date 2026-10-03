@@ -5,17 +5,6 @@ import { BookOpenIcon } from "@phosphor-icons/react";
 import { Box, Heading, Text, Card, Stack, Image } from "@chakra-ui/react";
 
 function App() {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "No data";
-
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) return "No data";
-
-    return new Intl.DateTimeFormat("ru-RU", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(date);
-  };
 
   // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
   const [players, setPlayers] = useState<any[]>([]);
@@ -104,8 +93,13 @@ function App() {
                 </Text>
 
                 <Text>
-                  {/* Используется функция formatDate для форматирования ISO-строки */}
-                  Last login: {formatDate(player.profile.last_login)}
+                    {/* Используется тернарный оператор, где спрашивается,
+                      есть ли дата последнего входа
+                      Если дата есть (?), то преобразуем её в эстонский формат
+                      Если даты нет (:), то показываем "No data" */}
+                  Last login: {player.profile.last_login
+                  ? new Date(player.profile.last_login).toLocaleString("et-EE")
+                  : "No data"}
                 </Text>
 
                 <Text>
