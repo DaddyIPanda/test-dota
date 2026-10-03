@@ -55,10 +55,8 @@ function App() {
        alignItems- элемент выравнивается по вертикали, 
        gap- расстояние между элементами.*/}
 
-      <Box> 
-        <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2"> Test Dota 2 <BookOpenIcon size={32} weight="duotone" />
-        </Heading>
-      </Box>
+      <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2"> Test Dota 2 <BookOpenIcon size={32} weight="duotone" />
+      </Heading>
       <Text maxW="800px" mx="auto" mb="6">
         This application allows users to search for Dota 2 players by their Steam ID and view information about them.
         You can also explore hero statistics using data from the OpenDota API.
