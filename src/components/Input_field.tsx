@@ -23,6 +23,7 @@ function InputField({ searchTerm, setSearchTerm, setSubmit }: Props) {
     срабатывает эта функция. Она берет то, что сейчас написано в поле,
     и с помощью setSubmit записывает это searchTerm */}
             <br />
+            <br />
             <Button type="submit"> Search <ArrowFatLineRightIcon size={15} weight="fill" /> </Button>
         </form>
     );

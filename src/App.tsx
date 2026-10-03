@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Input_field from "./components/Input_field";
 import { BookOpenIcon } from "@phosphor-icons/react";
@@ -71,7 +71,7 @@ function App() {
       {loading && <Text>Loading...</Text>}
       {error && (
           <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
-            Error fetching player data. Please check the Steam ID and try again.
+            Error: {error}
           </Text>
         )}
       {/* Перебор массива players и создание карточек для каждого игрока */}
