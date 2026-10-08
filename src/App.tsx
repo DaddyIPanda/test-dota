@@ -32,7 +32,8 @@ function App() {
 
         setPlayers([data]);
   
-      } catch (error : any) {
+      // Если запрос не удался, то в catch попадет ошибка. Она показывается в консоли и в интерфейсе, а массив игроков очищается
+      } catch (error : any) { 
         console.log(error);
         setError(error.message);
         setPlayers([]);
@@ -45,7 +46,7 @@ function App() {
   }, [submit]); // useEffect будет срабатывать каждый раз, когда submit изменяется
 
   return (
-    <Box>
+    <Box minH="100vh" bgGradient="to-r" gradientFrom="#09203F" gradientTo="#537895">
 
        {/* maxW- насколько широкий может быть элемент,
        mx- внешний отступ слева/справа,
@@ -53,27 +54,47 @@ function App() {
        display- как элемент будет отображаться,
        justifyContent- элемент выравнивается по горизонтали, 
        alignItems- элемент выравнивается по вертикали, 
-       gap- расстояние между элементами.*/}
+       gap- расстояние между элементами.
+       mb- внешний отступ снизу
+       mt- внешний отступ сверху*/}
 
-      <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2"> Test Dota 2 <BookOpenIcon size={32} weight="duotone" />
+      <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2">
+        Test Dota 2 <BookOpenIcon size={32} weight="duotone" />
       </Heading>
       <Text maxW="800px" mx="auto" mb="6">
         This application allows users to search for Dota 2 players by their Steam ID and view information about them.
         You can also explore hero statistics using data from the OpenDota API.
       </Text>
+
       <Input_field
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         setSubmit={setSubmit}
       />
+
       <br />
       <br />
-      {loading && <Text>Loading...</Text>}
+      {loading && <Text mx="auto" display="flex" justifyContent="center">Loading...</Text>}
+
+      {/* Используется тернарный оператор, где спрашивается,
+      есть ли в ошибке определенный код ошибки
+      если есть 400 (?), то показываем "Error: Please enter a valid Steam ID. The Steam ID should be a numeric value."
+      если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID and try again"
+      если есть другая ошибка (:), то показываем "Error: {error}" */}
       {error && (
-          <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
+        error.includes("400") 
+        ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
+            Error: Please enter a valid Steam ID. The Steam ID should be a numeric value.
+          </Text> )
+        : error.includes("404")
+        ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
+            Error: Player not found. Please check the Steam ID and try again
+          </Text> )
+        : ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
             Error: {error}
-          </Text>
-        )}
+          </Text> )
+      )}
+
       {/* Перебор массива players и создание карточек для каждого игрока */}
       {players.map((player) => (
         <Card.Root key={player.profile.account_id} maxW="800px" mx="auto" mt="6">
@@ -105,8 +126,8 @@ function App() {
                 <Text>
                     {/* Используется тернарный оператор, где спрашивается,
                       есть ли дата последнего входа
-                      Если дата есть (?), то преобразуем её в эстонский формат
-                      Если даты нет (:), то показываем "No data" */}
+                      если дата есть (?), то преобразуем её в эстонский формат
+                      если даты нет (:), то показываем "No data" */}
                   Last login: {player.profile.last_login
                   ? new Date(player.profile.last_login).toLocaleString("et-EE")
                   : "No data"}
@@ -129,7 +150,7 @@ function App() {
           </Card.Body>
         </Card.Root>
       ))}
-  </Box>
+  </Box >
   );
 }
 
