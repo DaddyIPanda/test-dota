@@ -24,10 +24,10 @@ export default function Main() {
           <Link to="/home">Home</Link>
         </Button>
         <Button>
-          <a href="/search_players">Search Players</a>
+          <Link to="/search_players">Search Players</Link>
         </Button>
         <Button>
-          <a href="/hero_statistics">Hero Statistics</a>
+          <Link to="/hero_statistics">Hero Statistics</Link>
         </Button>
       </HStack>
       <Text maxW="800px" mx="auto">
