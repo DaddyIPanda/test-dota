@@ -7,10 +7,8 @@ export default function NotFoundPage() {
       <Heading mx="auto" display="flex" justifyContent="center">
         404 Not Found
       </Heading>
-      <br>
-      </br>
-      <Button mx="auto" display="flex" justifyContent="center">
-        <Link to="/">Go back home</Link>
+      <Button mx="auto" display="flex" justifyContent="center" mb="6">
+        <Link to="/home">Go back home</Link>
       </Button>
     </Box>
   );

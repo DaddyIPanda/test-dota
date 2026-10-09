@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Input_field from "../components/input_field";
-import { Box, Heading, Text, Card, Stack, Image } from "@chakra-ui/react";
+import { Box, Heading, Text, Card, Stack, Image, HStack, Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function SearchPlayers() {
 
@@ -60,6 +61,17 @@ export default function SearchPlayers() {
       <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2">
         Player Profile Search by Steam ID
       </Heading>
+      <HStack mt="6" mb="6" justifyContent="center" gap="5" display="flex">
+        <Button>
+          <Link to="/home">Home</Link>
+        </Button>
+        <Button>
+          <a href="/search_players">Search Players</a>
+        </Button>
+        <Button>
+          <a href="/hero_statistics">Hero Statistics</a>
+        </Button>
+      </HStack>
       <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" mb= "6">
         Find players instantly. Type in a Steam ID to explore their profile.
       </Text>

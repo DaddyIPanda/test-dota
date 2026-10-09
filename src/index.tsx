@@ -5,15 +5,15 @@ import Main from "./pages/main";
 import HeroStatistics from "./pages/hero_statistics";
 import NotFoundPage from "./pages/not_found_page";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/",
+    path: "/home",
     element: <Main />,
     errorElement: <NotFoundPage />,
   },

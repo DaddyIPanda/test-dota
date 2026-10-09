@@ -1,5 +1,5 @@
-import { Heading, Button, Box, Text } from "@chakra-ui/react";
-
+import { Heading, Button, Box, Text, HStack } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function HeroStatistics() {
     return(
@@ -18,6 +18,17 @@ export default function HeroStatistics() {
       <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2">
         Hero Search by Their Name
       </Heading>
+      <HStack mt="6" mb="6" justifyContent="center" gap="5" display="flex">
+        <Button>
+          <Link to="/home">Home</Link>
+        </Button>
+        <Button>
+          <a href="/search_players">Search Players</a>
+        </Button>
+        <Button>
+          <a href="/hero_statistics">Hero Statistics</a>
+        </Button>
+      </HStack>
       <Text maxW="800px" mx="auto" mb="6">
         Here you can find your hero in Dota 2 and what are their statistics are
       </Text>
