@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Input_field from "./components/Input_field";
-import { BookOpenIcon } from "@phosphor-icons/react";
+import Input_field from "../components/input_field";
 import { Box, Heading, Text, Card, Stack, Image } from "@chakra-ui/react";
 
-function App() {
+export default function SearchPlayers() {
 
   // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
   const [players, setPlayers] = useState<any[]>([]);
@@ -46,7 +45,7 @@ function App() {
   }, [submit]); // useEffect будет срабатывать каждый раз, когда submit изменяется
 
   return (
-    <Box minH="100vh" bgGradient="to-r" gradientFrom="#09203F" gradientTo="#537895">
+    <Box minH="100vh" bgGradient="to-br" gradientFrom="#09203F" gradientTo="#537895">
 
        {/* maxW- насколько широкий может быть элемент,
        mx- внешний отступ слева/справа,
@@ -59,11 +58,10 @@ function App() {
        mt- внешний отступ сверху*/}
 
       <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2">
-        Test Dota 2 <BookOpenIcon size={32} weight="duotone" />
+        Player Profile Search by Steam ID
       </Heading>
-      <Text maxW="800px" mx="auto" mb="6">
-        This application allows users to search for Dota 2 players by their Steam ID and view information about them.
-        You can also explore hero statistics using data from the OpenDota API.
+      <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" mb= "6">
+        Find players instantly. Type in a Steam ID to explore their profile.
       </Text>
 
       <Input_field
@@ -72,9 +70,7 @@ function App() {
         setSubmit={setSubmit}
       />
 
-      <br />
-      <br />
-      {loading && <Text mx="auto" display="flex" justifyContent="center">Loading...</Text>}
+      {loading && <Text mx="auto" display="flex" justifyContent="center" mt="6">Loading...</Text>}
 
       {/* Используется тернарный оператор, где спрашивается,
       есть ли в ошибке определенный код ошибки
@@ -153,5 +149,3 @@ function App() {
   </Box >
   );
 }
-
-export default App;
