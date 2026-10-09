@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/test-dota/static/js/main.045dd54e.js",
+    "main.js": "/test-dota/static/js/main.c319487c.js",
     "index.html": "/test-dota/index.html",
-    "main.045dd54e.js.map": "/test-dota/static/js/main.045dd54e.js.map"
+    "main.c319487c.js.map": "/test-dota/static/js/main.c319487c.js.map"
   },
   "entrypoints": [
-    "static/js/main.045dd54e.js"
+    "static/js/main.c319487c.js"
   ]
 }
