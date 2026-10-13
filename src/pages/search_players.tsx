@@ -8,6 +8,7 @@ export default function SearchPlayers() {
 
   // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
   const [players, setPlayers] = useState<any[]>([]);
+  const [recentMatches, setRecentMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,18 +26,23 @@ export default function SearchPlayers() {
       try {
         setError(null);
         setLoading(true);
+        setRecentMatches([]);
 
         // Отправить GET-запрос на OpenDota API, передав туда то, что пользователь ввёл в submit
         const response = await axios.get(`https://api.opendota.com/api/players/${submit}`);
+        const response1 = await axios.get(`https://api.opendota.com/api/players/${submit}/recentMatches`);
         const data = response.data;
+        const data1 = response1.data;
 
         setPlayers([data]);
-  
-      // Если запрос не удался, то в catch попадет ошибка. Она показывается в консоли и в интерфейсе, а массив игроков очищается
-      } catch (error : any) { 
+        setRecentMatches(data1.slice(0, 5));
+
+        // Если запрос не удался, то в catch попадет ошибка. Она показывается в консоли и в интерфейсе, а массив игроков очищается
+      } catch (error: any) {
         console.log(error);
         setError(error.message);
         setPlayers([]);
+        setRecentMatches([]);
       } finally {
         setLoading(false);
       }
@@ -59,7 +65,7 @@ export default function SearchPlayers() {
        mt- внешний отступ сверху*/}
 
       <Heading maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" gap="2">
-        Player Profile Search by Steam ID
+        Player Profile Search by Steam ID3
       </Heading>
       <HStack mt="6" mb="6" justifyContent="center" gap="5" display="flex">
         <Button>
@@ -73,7 +79,7 @@ export default function SearchPlayers() {
         </Button>
       </HStack>
       <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" mb= "6">
-        Find players instantly. Type in a Steam ID to explore their profile.
+        Find players instantly. Type in a Steam ID3 to explore their profile.
       </Text>
 
       <Input_field
@@ -86,17 +92,17 @@ export default function SearchPlayers() {
 
       {/* Используется тернарный оператор, где спрашивается,
       есть ли в ошибке определенный код ошибки
-      если есть 400 (?), то показываем "Error: Please enter a valid Steam ID. The Steam ID should be a numeric value."
-      если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID and try again"
+      если есть 400 (?), то показываем "Error: Please enter a valid Steam ID3. The Steam ID3 should be a numeric value."
+      если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID3 and try again"
       если есть другая ошибка (:), то показываем "Error: {error}" */}
       {error && (
         error.includes("400") 
         ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
-            Error: Please enter a valid Steam ID. The Steam ID should be a numeric value.
+            Error: Please enter a valid Steam ID3. The Steam ID3 should be a numeric value.
           </Text> )
         : error.includes("404")
         ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
-            Error: Player not found. Please check the Steam ID and try again
+            Error: Player not found. Please check the Steam ID3 and try again
           </Text> )
         : ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
             Error: {error}
@@ -153,11 +159,47 @@ export default function SearchPlayers() {
                   : "No data"}
                 </Text>
               </Box>
-
             </Stack>
           </Card.Body>
+
+          <Card.Body>
+          <Heading size="md">Recent matches:</Heading>
+            <HStack gap="4" mt="4" align="start">
+
+              {recentMatches.map((match) => (
+                <Box key={match.match_id}>
+
+                  <Text>
+                    Match ID: {match.match_id 
+                    ? match.match_id 
+                    : "No data"}
+                  </Text>
+
+                  <Text>
+                    Match date: {match.duration 
+                    ? new Date(match.start_time * 1000).toLocaleString("et-EE")
+                    : "No data"} 
+                  </Text>
+
+                  <Text>
+                    Match duration: {match.duration 
+                    ? Math.round(match.duration / 60) + " minutes" 
+                    : "No data"}
+                  </Text>
+
+                  <Text>
+                    Result: {match.radiant_win 
+                     ? "Won"
+                     : "Lost"}
+                  </Text>
+
+                </Box>
+              ))}
+            </HStack>
+          </Card.Body>
+
         </Card.Root>
       ))}
-  </Box >
+    </Box>
   );
 }
