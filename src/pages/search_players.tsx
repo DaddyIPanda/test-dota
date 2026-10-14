@@ -10,7 +10,8 @@ export default function SearchPlayers() {
   const [players, setPlayers] = useState<any[]>([]);
   const [recentMatches, setRecentMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [steamError, setSteamError] = useState<string | null>(null);
+  const [matchesError, setMatchesError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [submit, setSubmit] = useState("");
 
@@ -23,28 +24,57 @@ export default function SearchPlayers() {
 
     // Подберание данных о игроках из OpenDota API
     const PlayerData = async () => {
+      setSteamError(null);
+      setMatchesError(null);
+      setLoading(true);
+
       try {
-        setError(null);
-        setLoading(true);
-        setRecentMatches([]);
+        // Получаем данные игрока
+        const response = await axios.get(
+            `https://api.opendota.com/api/players/${submit}`
+        );
 
-        // Отправить GET-запрос на OpenDota API, передав туда то, что пользователь ввёл в submit
-        const response = await axios.get(`https://api.opendota.com/api/players/${submit}`);
-        const response1 = await axios.get(`https://api.opendota.com/api/players/${submit}/recentMatches`);
         const data = response.data;
-        const data1 = response1.data;
-
         setPlayers([data]);
-        setRecentMatches(data1.slice(0, 5));
+      
+      // Если запрос не удался, то в catch попадет ошибка. Она показывается в консоли и в интерфейсе, а массив игроков очищается  
+      } catch (steamError: any) {
+          console.log(steamError);
+          setSteamError(steamError.message);
+          setPlayers([]);
+      }
 
-        // Если запрос не удался, то в catch попадет ошибка. Она показывается в консоли и в интерфейсе, а массив игроков очищается
-      } catch (error: any) {
-        console.log(error);
-        setError(error.message);
-        setPlayers([]);
-        setRecentMatches([]);
+      try {
+          // Получаем последние матчи игрока
+          const response1 = await axios.get(
+              `https://api.opendota.com/api/players/${submit}/recentMatches`
+          );
+
+          const data1 = response1.data;
+
+          // Сначала происходит проверка формат ответа API, затем, есть ли матчи:
+          // Если массив пустой, то пишется ощибка,
+          // Если матчи есть, то сохроняется первые пять и удаляется ошибка.
+          // Если ответ имеет неправильный формат, то очищается список и показывается сообщение о недоступности данных
+          if (Array.isArray(data1)) {
+              setRecentMatches(data1.slice(0, 5));
+            if (data1.length === 0) { // Это называется строгое сравнение. '===' сравнивает и значение, и тип данных
+              setMatchesError("No recent matches found. The player may not have played recently.");
+            } else {
+              setMatchesError(null);
+            }
+          } else {
+              setMatchesError("Recent matches data is unavailable.");
+              setRecentMatches([]);
+          }
+
+      } catch (matchesError: any) {
+          console.log(matchesError);
+          setMatchesError(matchesError.message);
+          setRecentMatches([]);
+
       } finally {
-        setLoading(false);
+          setLoading(false);
       }
     };
 
@@ -95,17 +125,17 @@ export default function SearchPlayers() {
       если есть 400 (?), то показываем "Error: Please enter a valid Steam ID3. The Steam ID3 should be a numeric value."
       если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID3 and try again"
       если есть другая ошибка (:), то показываем "Error: {error}" */}
-      {error && (
-        error.includes("400") 
+      {steamError && (
+        steamError.includes("400") 
         ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
             Error: Please enter a valid Steam ID3. The Steam ID3 should be a numeric value.
           </Text> )
-        : error.includes("404")
+        : steamError.includes("404")
         ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
             Error: Player not found. Please check the Steam ID3 and try again
           </Text> )
         : ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
-            Error: {error}
+            Error: {steamError}
           </Text> )
       )}
 
@@ -164,8 +194,14 @@ export default function SearchPlayers() {
 
           <Card.Body>
           <Heading size="md">Recent matches:</Heading>
-            <HStack gap="4" mt="4" align="start">
+          
+          {matchesError && (
+            <Text color="red.500" mt="4">
+              Error: {matchesError}
+            </Text>
+          )}
 
+            <HStack gap="4" mt="4" align="start">
               {recentMatches.map((match) => (
                 <Box key={match.match_id}>
 
