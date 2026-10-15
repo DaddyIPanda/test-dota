@@ -6,7 +6,11 @@ import { Link } from "react-router-dom";
 
 export default function SearchPlayers() {
 
-  // Функция, где переменная players, loading и тд хранит данные, а setPlayers, setLoading и тд их меняет
+  // useState создаёт состояние
+  // <any[]> означает, что это массив, элементы которого не проверяются строго TypeScript
+  // players хранит героев, найденных по поисковому запросу
+  // setPlayers изменяет значение players
+
   const [players, setPlayers] = useState<any[]>([]);
   const [recentMatches, setRecentMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +27,8 @@ export default function SearchPlayers() {
     }
 
     // Подберание данных о игроках из OpenDota API
+    // async обозначает асинхронную функцию
+    // Она позволяет использовать await для ожидания результата запроса
     const PlayerData = async () => {
       setSteamError(null);
       setMatchesError(null);
@@ -112,6 +118,7 @@ export default function SearchPlayers() {
         Find players instantly. Type in a Steam ID3 to explore their profile.
       </Text>
 
+      {/* Передача компоненту поля поиска необходимые значения и функции*/}
       <Input_field
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -123,7 +130,7 @@ export default function SearchPlayers() {
       {/* Используется тернарный оператор, где спрашивается,
       есть ли в ошибке определенный код ошибки
       если есть 400 (?), то показываем "Error: Please enter a valid Steam ID3. The Steam ID3 should be a numeric value."
-      если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID3 and try again"
+      если есть 404 (?), то показываем "Error: Player not found. Please check the Steam ID3 and try again."
       если есть другая ошибка (:), то показываем "Error: {error}" */}
       {steamError && (
         steamError.includes("400") 
@@ -132,14 +139,15 @@ export default function SearchPlayers() {
           </Text> )
         : steamError.includes("404")
         ? ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
-            Error: Player not found. Please check the Steam ID3 and try again
+            Error: Player not found. Please check the Steam ID3 and try again.
           </Text> )
         : ( <Text maxW="800px" mx="auto" display="flex" justifyContent="center" alignItems="center" color="red.500">
             Error: {steamError}
           </Text> )
       )}
 
-      {/* Перебор массива players и создание карточек для каждого игрока */}
+      { /* map перебирает массив players и создаёт карточку для каждого пользователя Steam
+      key={player.profile.account_id} помогает React различать карточки разных пользователей*/}
       {players.map((player) => (
         <Card.Root key={player.profile.account_id} maxW="800px" mx="auto" mt="6">
           <Card.Body>
